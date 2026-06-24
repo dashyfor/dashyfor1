@@ -1,0 +1,562 @@
+/* =========================
+   FULLSCREEN BACKGROUND
+========================= */
+
+.login-bg{
+    position:fixed;
+    inset:0;
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+}
+
+.hero__image{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.hero__image--face{
+    z-index:1;
+}
+
+.hero__image--helmet{
+
+    z-index:2;
+
+    opacity:0;
+
+    transition:opacity .6s;
+
+    -webkit-mask-image:
+      radial-gradient(
+        circle 0px at var(--mouse-x,50%) var(--mouse-y,50%),
+        white 0%,
+        white 70%,
+        transparent 100%
+      );
+
+    mask-image:
+      radial-gradient(
+        circle 0px at var(--mouse-x,50%) var(--mouse-y,50%),
+        white 0%,
+        white 70%,
+        transparent 100%
+      );
+}
+
+.hero__image--helmet.active-mask{
+
+    opacity:1;
+
+    -webkit-mask-image:
+      radial-gradient(
+        circle 220px at var(--mouse-x,50%) var(--mouse-y,50%),
+        white 0%,
+        white 70%,
+        transparent 100%
+      );
+
+    mask-image:
+      radial-gradient(
+        circle 220px at var(--mouse-x,50%) var(--mouse-y,50%),
+        white 0%,
+        white 70%,
+        transparent 100%
+      );
+}
+
+.ripple-layer{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:5;
+}
+
+.ripple{
+    position:absolute;
+
+    width:50px;
+    height:50px;
+
+    border-radius:50%;
+
+    transform:translate(-50%, -50%);
+
+    backdrop-filter:blur(8px);
+
+    animation:waterRipple 2.5s ease-out forwards;
+}
+
+@keyframes waterRipple{
+
+    0%{
+        width:20px;
+        height:20px;
+        opacity:1;
+    }
+
+    100%{
+        width:300px;
+        height:300px;
+        opacity:0;
+    }
+
+}
+
+.hero__image--helmet{
+    filter:url(#liquid);
+}
+
+:host{
+    display:block;
+    width:100%;
+    height:100vh;
+    overflow:hidden;
+}
+
+.login-bg{
+    position:fixed;
+    inset:0;
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+    z-index:0;
+}
+
+/* FOTO DASAR */
+
+.hero__image{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* FOTO TANPA HELM */
+
+.hero__image--face{
+    z-index:1;
+}
+
+/* FOTO PAKAI HELM */
+
+.hero__image--helmet{
+    z-index:2;
+
+    opacity:0;
+
+    transition:
+      opacity .6s ease,
+      transform .3s ease;
+
+    -webkit-mask-image:
+      radial-gradient(
+        circle 0px at var(--mouse-x,50%) var(--mouse-y,50%),
+        white 0%,
+        white 70%,
+        transparent 100%
+      );
+
+    mask-image:
+      radial-gradient(
+        circle 0px at var(--mouse-x,50%) var(--mouse-y,50%),
+        white 0%,
+        white 70%,
+        transparent 100%
+      );
+
+    -webkit-mask-repeat:no-repeat;
+    mask-repeat:no-repeat;
+}
+
+/* AKTIF SAAT CURSOR BERGERAK */
+
+.hero__image--helmet.active-mask{
+
+    opacity:1;
+
+    -webkit-mask-image:
+      radial-gradient(
+        circle 220px at var(--mouse-x,50%) var(--mouse-y,50%),
+        white 0%,
+        white 65%,
+        transparent 100%
+      );
+
+    mask-image:
+      radial-gradient(
+        circle 220px at var(--mouse-x,50%) var(--mouse-y,50%),
+        white 0%,
+        white 65%,
+        transparent 100%
+      );
+}
+
+/* OVERLAY GELAP */
+
+.login-bg::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.35);
+    z-index:3;
+}
+
+/* =========================
+   LOGIN POSITION
+========================= */
+
+.login-wrapper{
+    position:relative;
+    z-index:100;
+
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+
+    min-height:100vh;
+
+    padding-left:5%;
+    padding-right:2rem;
+}
+
+.login-box{
+    width:100%;
+    max-width:440px;
+}
+
+/* =========================
+   GLASS EFFECT
+========================= */
+
+.glass-card{
+    background:rgba(255,255,255,.15);
+
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.25);
+
+    border-radius:30px;
+
+    padding:2rem;
+
+    box-shadow:
+      0 8px 32px rgba(0,0,0,.25);
+}
+
+.text-header h1{
+    color:white;
+    font-weight:700;
+    text-align:center;
+    margin-bottom:1rem;
+}
+
+.login-box-msg{
+    color:white;
+    text-align:center;
+}
+
+/* =========================
+   INPUT
+========================= */
+
+.input-group{
+    margin-bottom:1rem;
+}
+
+.form-control{
+    background:rgba(255,255,255,.15)!important;
+    border:none!important;
+    color:white!important;
+}
+
+.form-control::placeholder{
+    color:rgba(255,255,255,.75);
+}
+
+.input-group-text{
+    background:rgba(255,255,255,.15)!important;
+    border:none!important;
+    color:white!important;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.btn-glass{
+    width:100%;
+
+    border:none;
+
+    border-radius:40px;
+
+    padding:.8rem;
+
+    font-weight:600;
+
+    background:white;
+    color:black;
+}
+
+.btn-glass:hover{
+    transform:translateY(-2px);
+}
+
+/* =========================
+   CARD ADMIN LTE
+========================= */
+
+::ng-deep .card,
+::ng-deep .card-body,
+::ng-deep .card-header{
+    background:transparent!important;
+    border:none!important;
+    box-shadow:none!important;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:768px){
+
+    .login-wrapper{
+        justify-content:center;
+        padding:1rem;
+    }
+
+    .login-box{
+        max-width:100%;
+    }
+
+}
+:host {
+  display: block;
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(2px);
+  z-index: -1;
+}
+
+.login-wrapper {
+  width: 100%;
+  padding: 1.5rem;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+
+.login-wrapper {
+  justify-content: center;
+}
+
+
+@media (min-width: 992px) {
+  .login-wrapper {
+    justify-content: flex-start;
+    margin-left: 6%;
+  }
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  padding: 2rem 2rem 2.2rem;
+  max-width: 440px;
+  width: 100%;
+}
+
+.text-header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #fff, rgba(255,255,240,0.9));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.5px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  margin-bottom: 0.5rem;
+}
+
+.login-box-msg {
+  color: rgba(255,255,245,0.95);
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  letter-spacing: 0.2px;
+}
+
+.input-group {
+  margin-bottom: 1.2rem;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.3);
+  transition: all 0.2s;
+}
+
+.input-group:focus-within {
+  background: rgba(255,255,255,0.3);
+  border-color: rgba(255,255,255,0.7);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.2);
+}
+
+.form-control {
+  background: transparent !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 500;
+  padding: 0.9rem 1rem;
+  font-size: 0.95rem;
+}
+
+.form-control::placeholder {
+  color: rgba(255,255,255,0.7);
+  font-weight: 400;
+}
+
+.input-group-text {
+  background: transparent !important;
+  border: none !important;
+  color: rgba(255,255,255,0.9) !important;
+  padding-right: 0.8rem;
+}
+
+.icheck-primary {
+  color: white;
+  font-weight: 500;
+}
+
+.icheck-primary input {
+  transform: scale(1.1);
+  margin-right: 6px;
+  accent-color: #4f46e5;
+}
+
+.btn-glass {
+  background: rgba(255,255,255,0.85);
+  border: none;
+  border-radius: 40px;
+  padding: 0.7rem 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #1f2937;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.btn-glass:hover {
+  background: white;
+  transform: scale(0.98);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.social-auth-links .btn {
+  border-radius: 40px;
+  font-weight: 500;
+  backdrop-filter: blur(8px);
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  transition: 0.2s;
+}
+
+.social-auth-links .btn-primary {
+  background: rgba(59,89,152,0.7);
+}
+
+.social-auth-links .btn-danger {
+  background: rgba(219,68,55,0.7);
+}
+
+.social-auth-links .btn:hover {
+  background: rgba(255,255,255,0.2);
+  border-color: white;
+}
+
+.card-body p a {
+  color: rgba(255,255,245,0.9);
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px dotted rgba(255,255,255,0.5);
+  transition: 0.2s;
+}
+
+.card-body p a:hover {
+  color: white;
+  border-bottom-color: white;
+}
+
+
+::ng-deep .modal-content {
+  background: rgba(30,30,40,0.9);
+  backdrop-filter: blur(12px);
+  color: white;
+  border-radius: 28px;
+}
+
+::ng-deep .modal-header.bg-warning {
+  background: rgba(245,158,11,0.8) !important;
+  border-radius: 28px 28px 0 0;
+}
+
+
+::ng-deep .card.card-outline,
+::ng-deep .card-header,
+::ng-deep .card-body {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+::ng-deep .login-box {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 480px) {
+  .glass-card {
+    padding: 1.5rem;
+  }
+  .text-header h1 {
+    font-size: 1.6rem;
+  }
+}

@@ -1,0 +1,166 @@
+<div class="wrapper">
+  <app-header></app-header>
+  <app-sidebar moduleName="cuaca"></app-sidebar>
+
+  <div class="content-wrapper">
+    <!-- Header -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Cuaca</h1>
+          </div>
+
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item">
+                <a [routerLink]="['/dashboard']"> Home </a>
+              </li>
+              <li class="breadcrumb-item active">Cuaca</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Search -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <div class="form-group mb-0">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Masukkan nama kota lalu tekan Enter"
+                    (keydown.enter)="handleEnter($event)"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Current Weather -->
+        <div class="row mt-3" *ngIf="currentWeather && cityData">
+          <div class="col-12">
+            <div class="card shadow-sm weather-card">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <!-- Kiri -->
+                  <div class="col-lg-7 col-md-12">
+                    <small class="text-muted">
+                      {{ todayDate }}
+                    </small>
+
+                    <h2 class="font-weight-bold mb-0">
+                      {{ cityData.name }},
+                      {{ cityData.country }}
+                    </h2>
+
+                    <p class="mb-0 text-capitalize">
+                      {{ currentWeather.weather[0].description }}
+                    </p>
+                  </div>
+
+                  <!-- Kanan -->
+                  <div class="col-lg-5 col-md-12 text-center text-lg-right mt-3 mt-lg-0">
+                    <img
+                      [src]="getWeatherIconUrl(currentWeather.weather[0].icon)"
+                      alt="Weather Icon"
+                      class="weather-icon"
+                    />
+
+                    <div class="weather-temp">
+                      {{ kelvinToCelsius(currentWeather.main.temp) | number: '1.0-0' }}°C
+                    </div>
+                  </div>
+                </div>
+
+                <hr />
+
+                <div class="row">
+                  <div class="col-lg-7">
+                    <div class="row">
+                      <div class="col-md-6 col-12 mb-2">
+                        <i
+                          class="fas fa-wind mr-2"
+                          [style.transform]="'rotate(' + currentWeather.wind.deg + 'deg)'"
+                        ></i>
+                        {{ currentWeather.wind.speed }} m/s
+                      </div>
+
+                      <div class="col-md-6 col-12 mb-2">
+                        <i class="fas fa-tint mr-2"></i>
+                        Kelembaban:
+                        <strong> {{ currentWeather.main.humidity }}% </strong>
+                      </div>
+
+                      <div class="col-md-6 col-12 mb-2">
+                        <i class="fas fa-tachometer-alt mr-2"></i>
+                        {{ currentWeather.main.pressure }} hPa
+                      </div>
+
+                      <div class="col-md-6 col-12 mb-2">
+                        <i class="fas fa-eye mr-2"></i>
+                        {{ (currentWeather.visibility / 1000).toFixed(1) }}
+                        km
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Map -->
+                  <div class="col-lg-5 mt-3 mt-lg-0">
+                    <div id="map-container" class="rounded shadow-sm"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="row mt-3" *ngIf="!currentWeather || !cityData">
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-body text-center py-5">
+                <i class="fas fa-cloud text-muted" style="font-size: 48px; margin-bottom: 15px"></i>
+                <p class="text-muted">Masukkan nama kota untuk melihat data cuaca</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Forecast -->
+        <div class="row mt-3">
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <h5 class="font-weight-bold mb-3">Forecast 5 Hari</h5>
+
+                <div class="table-responsive">
+                  <table id="table1" class="table table-bordered table-striped table-hover w-100">
+                    <thead>
+                      <tr>
+                        <th>Waktu</th>
+                        <th>Icon</th>
+                        <th>Cuaca</th>
+                        <th>Suhu</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <app-footer></app-footer>
+</div>
