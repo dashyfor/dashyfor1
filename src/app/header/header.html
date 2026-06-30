@@ -95,6 +95,19 @@
           <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
         </div>
       </li>
+
+
+      <!-- Ndarkmode -->
+                <li class="nav-item">
+            <a href="javascript:void(0)" class="nav-link" (click)="toggleTheme()">
+              <i
+                class="nav-icon fas fa-sun"
+                [class.fa-moon]="!isDarkMode"
+                [class.fa-sun]="isDarkMode"
+              ></i>
+            </a>
+          </li>
+
       <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">

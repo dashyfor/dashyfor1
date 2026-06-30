@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 
 import { Sidebar } from '../sidebar/sidebar';
 import { Footer } from '../footer/footer';
-import { HeadderDark } from '../headder-dark/headder-dark';
+import { Header } from '../header/header';
 import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard2',
   standalone: true,
-  imports: [Sidebar, Footer, HeadderDark, RouterModule],
+  imports: [Sidebar, Footer, Header, RouterModule],
   templateUrl: './dashboard2.html',
   styleUrl: './dashboard2.css',
 })

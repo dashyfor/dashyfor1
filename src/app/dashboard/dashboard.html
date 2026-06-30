@@ -1,5 +1,6 @@
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed pace-primary">
 <div class="wrapper">
-  <app-header />
+  <app-header></app-header>
   <app-sidebar moduleName="dashboard" />
 
   <!-- Content Wrapper. Contains page content -->
@@ -99,7 +100,7 @@
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-chart-pie mr-1"></i>
-                  Bulan Lahir Mahasiswa/i
+                  Rekap jurusan prodi Mahasiswa/i
                 </h3>
                 <div class="card-tools">
                   <ul class="nav nav-pills ml-auto">
@@ -113,12 +114,7 @@
                       >
                     </li>
                     <li class="nav-item">
-                      <a
-                        class="nav-link"
-                        href="#sales-chart"
-                        data-toggle="tab"
-                        id="tab-donut"
-                        (click)="loadDonutChart()"
+                      <a class="nav-link" href="#sales-chart" data-toggle="tab" id="tab-donut"
                         >Donut</a
                       >
                     </li>
@@ -163,42 +159,6 @@
                               display: block !important;
                             "
                           ></canvas>
-                        </div>
-                      </div>
-                      <!-- Kolom Kanan: Data Total -->
-                      <div class="col-md-5 d-flex align-items-center">
-                        <div class="glass-card w-100">
-                          <div class="glass-header">
-                            <h4>Data Mahasiswa</h4>
-                            <p>Data diambil otomatis dari API</p>
-                          </div>
-
-                          <div class="glass-item">
-                            <div class="glass-label">
-                              <i class="fas fa-male"></i>
-                              <span>Laki-laki</span>
-                            </div>
-                            <div class="glass-value">
-                              {{ totalLaki }}
-                            </div>
-                          </div>
-
-                          <div class="glass-item">
-                            <div class="glass-label">
-                              <i class="fas fa-female"></i>
-                              <span>Perempuan</span>
-                            </div>
-                            <div class="glass-value female">
-                              {{ totalPerempuan }}
-                            </div>
-                          </div>
-
-                          <div class="glass-divider"></div>
-
-                          <div class="glass-total">
-                            <span>Total Mahasiswa</span>
-                            <h2>{{ totalSemua }}</h2>
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -692,5 +652,6 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-  <app-footer />
+  <app-footer></app-footer>
 </div>
+</body>

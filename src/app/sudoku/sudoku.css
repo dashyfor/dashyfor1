@@ -1,0 +1,279 @@
+/* Gaya dasar */
+* {
+  box-sizing: border-box;
+}
+
+.sudoku-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0b0c1a, #1a1b2f);
+}
+
+.sudoku-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.sudoku-container {
+  max-width: 600px;
+  width: 100%;
+  padding: 25px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 300;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  letter-spacing: 2px;
+  margin: 0 0 20px 0;
+}
+
+/* Error Toast */
+.error-toast {
+  background: rgba(255, 70, 70, 0.25);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 70, 70, 0.4);
+  padding: 12px 20px;
+  border-radius: 50px;
+  color: #ff8a8a;
+  text-align: center;
+  margin-bottom: 18px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  animation: fadeSlide 0.3s ease;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Panel angka */
+.number-panel {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 25px;
+}
+
+.num-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  border: none;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.num-btn .badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: rgba(255, 215, 0, 0.8);
+  color: #000;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(255,215,0,0.4);
+}
+
+.num-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+  border-color: rgba(255,255,255,0.3);
+}
+
+.num-btn.selected {
+  background: rgba(100, 200, 255, 0.3);
+  border-color: #6af;
+  box-shadow: 0 0 20px rgba(100, 200, 255, 0.2);
+}
+
+.num-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Grid */
+.grid-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+  overflow-x: auto;
+}
+
+.sudoku-grid {
+  border-collapse: collapse;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(4px);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.sudoku-grid td {
+  width: 46px;
+  height: 46px;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  transition: background 0.2s;
+  cursor: default;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.sudoku-grid td.editable {
+  cursor: pointer;
+}
+
+.sudoku-grid td.editable:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sudoku-grid td.fixed {
+  background: rgba(255, 255, 255, 0.06);
+  color: #c8d0e0;
+  font-weight: 700;
+}
+
+.sudoku-grid td.error {
+  background: rgba(255, 80, 80, 0.3) !important;
+  box-shadow: inset 0 0 20px rgba(255,0,0,0.2);
+}
+
+.sudoku-grid td.highlight {
+  background: rgba(100, 200, 255, 0.08);
+}
+
+/* Border tebal untuk kotak 3x3 */
+.border-right {
+  border-right: 3px solid rgba(255, 255, 255, 0.3) !important;
+}
+.border-bottom {
+  border-bottom: 3px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.cell-value {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  line-height: 46px;
+  text-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+
+/* Panel aksi */
+.action-panel {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.action-btn {
+  padding: 10px 24px;
+  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  flex: 1 0 auto;
+  min-width: 80px;
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,0.3);
+}
+
+/* Responsif */
+@media (max-width: 600px) {
+  .sudoku-container {
+    padding: 15px;
+  }
+  .num-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  .num-btn .badge {
+    width: 16px;
+    height: 16px;
+    font-size: 0.6rem;
+    top: -4px;
+    right: -4px;
+  }
+  .sudoku-grid td {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+  .cell-value {
+    line-height: 36px;
+  }
+  .action-btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    min-width: 60px;
+  }
+  h1 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .sudoku-grid td {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+  .cell-value {
+    line-height: 28px;
+  }
+  .num-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+}

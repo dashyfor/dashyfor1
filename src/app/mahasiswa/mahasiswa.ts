@@ -14,7 +14,6 @@ declare const $: any;
   templateUrl: './mahasiswa.html',
   styleUrl: './mahasiswa.css',
 })
-
 export class Mahasiswa implements AfterViewInit {
 
   data: any;
@@ -22,7 +21,7 @@ export class Mahasiswa implements AfterViewInit {
 
   constructor(
     private httpClient: HttpClient,
-    private renderer: Renderer2,
+    private renderer: Renderer2
   ) {}
 
   ngAfterViewInit(): void {
@@ -34,11 +33,6 @@ export class Mahasiswa implements AfterViewInit {
     this.table1 = $('#table1').DataTable();
 
     this.bindMahasiswa();
-
-    // GLOBAL FUNCTION DELETE
-    (window as any).deleteMahasiswa = (nim: string) => {
-      this.deleteMahasiswa(nim);
-    };
 
   }
 
@@ -54,28 +48,22 @@ export class Mahasiswa implements AfterViewInit {
 
         data.forEach((element: any) => {
 
-          var tempatTanggalLahir =
+          const tempatTanggalLahir =
             element.TempatLahir + ', ' + element.TanggalLahir;
 
           const jenisKelaminFormatted =
             element.JenisKelamin +
             ' ' +
-            (element.JenisKelamin == 'Perempuan' ||
-            element.JenisKelamin == 'perempuan'
-              ? "<i class='fas fa-venus text-danger'></i>"
-              : element.JenisKelamin != 'Laki-laki'
-              ? "<i class='fas fa-mars text-primary'></i>"
-              : '');
-            
-          
+            (
+              element.JenisKelamin === 'Perempuan' ||
+              element.JenisKelamin === 'perempuan'
+                ? "<i class='fas fa-venus text-danger'></i>"
+                : element.JenisKelamin === 'Laki-laki'
+                ? "<i class='fas fa-mars text-primary'></i>"
+                : ''
+            );
 
-          // TOMBOL HAPUS
-          var tombolHapus =
-            "<button class='btn btn-danger btn-sm' " +
-            "onclick=\"window.deleteMahasiswa('" + element.NIM + "')\">" +
-            "<i class='fa fa-trash'></i> Hapus</button>";
-
-          var row = [
+          const row = [
             element.NIM,
             element.Nama,
             jenisKelaminFormatted,
@@ -83,8 +71,7 @@ export class Mahasiswa implements AfterViewInit {
             element.JP,
             element.Alamat,
             element.StatusNikah,
-            element.TahunMasuk,
-            tombolHapus
+            element.TahunMasuk
           ];
 
           this.table1.row.add(row);
@@ -98,70 +85,66 @@ export class Mahasiswa implements AfterViewInit {
   }
 
   showTambahModal(): void {
-
-    $("#tambahModal").modal();
-
+    $('#tambahModal').modal();
   }
 
   postRecord(): void {
 
-    var alamat = $("#alamatText").val();
-    var jenisKelamin = $("#jenisKelaminSelect").val();
-    var jp = $("#jpSelect").val();
-    var nama = $("#namaText").val();
-    var nim = $("#nimText").val();
-    var statusNikah = $("#statusNikahSelect").val();
-    var tahunMasuk = $("#tahunMasukText").val();
-    var tanggalLahir = $("#tanggalLahirText").val();
-    var tempatLahir = $("#tempatLahirText").val();
+    let alamat = $('#alamatText').val();
+    let jenisKelamin = $('#jenisKelaminSelect').val();
+    let jp = $('#jpSelect').val();
+    let nama = $('#namaText').val();
+    let nim = $('#nimText').val();
+    let statusNikah = $('#statusNikahSelect').val();
+    let tahunMasuk = $('#tahunMasukText').val();
+    let tanggalLahir = $('#tanggalLahirText').val();
+    let tempatLahir = $('#tempatLahirText').val();
 
-    // VALIDASI
-    if (!nim || nim.toString().length == 0) {
-      alert("NIM belum diisi");
+    if (!nim || nim.toString().length === 0) {
+      alert('NIM belum diisi');
       return;
     }
 
-    if (!nama || nama.toString().length == 0) {
-      alert("Nama belum diisi");
+    if (!nama || nama.toString().length === 0) {
+      alert('Nama belum diisi');
       return;
     }
 
-    if (!tempatLahir || tempatLahir.toString().length == 0) {
-      alert("Tempat lahir belum diisi");
+    if (!tempatLahir || tempatLahir.toString().length === 0) {
+      alert('Tempat lahir belum diisi');
       return;
     }
 
-    if (!jenisKelamin || jenisKelamin.toString().length == 0) {
-      alert("Jenis kelamin belum dipilih");
+    if (!jenisKelamin || jenisKelamin.toString().length === 0) {
+      alert('Jenis kelamin belum dipilih');
       return;
     }
 
-    if (!jp || jp.toString().length == 0) {
-      alert("Jurusan/Prodi belum dipilih");
+    if (!jp || jp.toString().length === 0) {
+      alert('Jurusan/Prodi belum dipilih');
       return;
     }
 
-    if (!alamat || alamat.toString().length == 0) {
-      alert("Alamat belum diisi");
+    if (!alamat || alamat.toString().length === 0) {
+      alert('Alamat belum diisi');
       return;
     }
 
-    if (!statusNikah || statusNikah.toString().length == 0) {
-      alert("Status pernikahan belum dipilih");
+    if (!statusNikah || statusNikah.toString().length === 0) {
+      alert('Status pernikahan belum dipilih');
       return;
     }
 
-    if (!tahunMasuk || tahunMasuk.toString().length == 0) {
-      alert("Tahun masuk belum diisi");
+    if (!tahunMasuk || tahunMasuk.toString().length === 0) {
+      alert('Tahun masuk belum diisi');
       return;
     }
 
-    if (!tanggalLahir || tanggalLahir.toString().length == 0) {
-      alert("Tanggal lahir belum diisi");
+    if (!tanggalLahir || tanggalLahir.toString().length === 0) {
+      alert('Tanggal lahir belum diisi');
       return;
     }
 
-    // ENCODE URL
     alamat = encodeURIComponent(alamat);
     jenisKelamin = encodeURIComponent(jenisKelamin);
     jp = encodeURIComponent(jp);
@@ -172,55 +155,28 @@ export class Mahasiswa implements AfterViewInit {
     tanggalLahir = encodeURIComponent(tanggalLahir);
     tempatLahir = encodeURIComponent(tempatLahir);
 
-    var url =
-      "https://stmikpontianak.cloud/011100862/tambahMahasiswa.php" +
-      "?alamat=" + alamat +
-      "&jenisKelamin=" + jenisKelamin +
-      "&jp=" + jp +
-      "&nama=" + nama +
-      "&nim=" + nim +
-      "&statusPernikahan=" + statusNikah +
-      "&tahunMasuk=" + tahunMasuk +
-      "&tanggalLahir=" + tanggalLahir +
-      "&tempatLahir=" + tempatLahir;
+    const url =
+      'https://stmikpontianak.cloud/011100862/tambahMahasiswa.php' +
+      '?alamat=' + alamat +
+      '&jenisKelamin=' + jenisKelamin +
+      '&jp=' + jp +
+      '&nama=' + nama +
+      '&nim=' + nim +
+      '&statusPernikahan=' + statusNikah +
+      '&tahunMasuk=' + tahunMasuk +
+      '&tanggalLahir=' + tanggalLahir +
+      '&tempatLahir=' + tempatLahir;
 
     this.httpClient.get(url)
       .subscribe((data: any) => {
 
         console.log(data);
 
-        alert(data.status + " --> " + data.message);
+        alert(data.status + ' --> ' + data.message);
 
         this.bindMahasiswa();
 
-        $("#tambahModal").modal("hide");
-
-      });
-
-  }
-
-  // FUNCTION DELETE
-  deleteMahasiswa(nim: string): void {
-
-    var konfirmasi = confirm("Yakin ingin menghapus data ini ?");
-
-    if (konfirmasi == false) {
-      return;
-    }
-
-    nim = encodeURIComponent(nim);
-
-    var url =
-      "https://stmikpontianak.cloud/011100862/hapusMahasiswa.php?nim=" + nim;
-
-    this.httpClient.get(url)
-      .subscribe((data: any) => {
-
-        console.log(data);
-
-        alert(data.status + " --> " + data.message);
-
-        this.bindMahasiswa();
+        $('#tambahModal').modal('hide');
 
       });
 

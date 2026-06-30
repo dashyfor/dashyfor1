@@ -30,7 +30,6 @@ export class Forex implements AfterViewInit {
 
     this.renderer.removeClass(document.body, 'sidebar-open');
     this.renderer.addClass(document.body, 'sidebar-closed');
-    this.renderer.addClass(document.body, 'sidebar-collapse');
 
     this._table1 = $('#table1').DataTable({
       responsive: true,
@@ -45,6 +44,19 @@ export class Forex implements AfterViewInit {
         {
           targets: 0,
           className: 'text-center'
+        },
+        {
+          // Kolom "Currency" (index 1) – tambahkan bendera
+          targets: 1,
+          render: function (data: string, type: string, row: any, meta: any) {
+            if (data && typeof data === 'string') {
+              // Ambil 2 huruf pertama (kode negara) dan ubah ke huruf kecil
+              const flagCode = data.substring(0, 2).toLowerCase();
+              // Kembalikan HTML bendera + kode mata uang
+              return `<span class="flag-icon flag-icon-${flagCode}" style="margin-right:5px;"></span> ${data}`;
+            }
+            return data;
+          }
         },
         {
           targets: 3,
@@ -122,7 +134,7 @@ export class Forex implements AfterViewInit {
 
               const row = [
                 index++,
-                currency,
+                currency,          // akan dirender dengan bendera via columnDefs
                 currencyName,
                 formatRate
               ];

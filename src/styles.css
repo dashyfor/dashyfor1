@@ -1,0 +1,89 @@
+/* =====================================
+   GLOBAL SMOOTH ANIMATION
+===================================== */
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    transition:
+        background-color .3s ease,
+        color .3s ease;
+}
+
+*{
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
+
+.content-wrapper{
+    transition:
+        margin-left .3s ease,
+        background-color .3s ease;
+}
+
+.main-sidebar{
+    transition:
+        width .3s ease,
+        transform .3s ease;
+}
+
+.main-header,
+.main-footer{
+    transition:
+        background-color .3s ease,
+        color .3s ease;
+}
+
+.card{
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        background-color .25s ease;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 25px rgba(0,0,0,.18);
+}
+
+.small-box{
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease;
+}
+
+.small-box:hover{
+    transform:translateY(-4px);
+    box-shadow:0 15px 30px rgba(0,0,0,.2);
+}
+
+.btn{
+    transition:all .25s ease;
+}
+
+.btn:hover{
+    transform:scale(1.03);
+}
+
+.nav-sidebar .nav-link{
+    transition:
+        padding-left .25s ease,
+        background-color .25s ease,
+        color .25s ease;
+}
+
+.nav-sidebar .nav-link:hover{
+    padding-left:22px;
+}
+
+.dark-mode *{
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
+}
