@@ -277,3 +277,62 @@ h1 {
     font-size: 0.8rem;
   }
 }
+
+/* ----- Dark Mode ----- */
+body.dark-mode .sudoku-container {
+  color: #fff;
+}
+body.dark-mode .sudoku-container h1,
+body.dark-mode .sudoku-container .cell-value {
+  color: #fff;
+}
+body.dark-mode .sudoku-container .num-btn {
+  color: #fff;
+}
+body.dark-mode .sudoku-container .num-btn .badge {
+  color: #fff;
+}
+body.dark-mode .sudoku-container .action-btn {
+  color: #fff;
+}
+body.dark-mode .sudoku-container .error-toast {
+  color: #fff;
+}
+body.dark-mode .sudoku-container .glass {
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+body.dark-mode .sudoku-grid td {
+  background: rgba(255,255,255,0.05);
+}
+body.dark-mode .sudoku-grid td .cell-value {
+  color: #fff;
+}
+body.dark-mode .sudoku-grid td.fixed .cell-value {
+  color: #8ab4f8;
+}
+body.dark-mode .sudoku-grid td.error {
+  background: rgba(255, 50, 50, 0.6) !important;
+}
+body.dark-mode .sudoku-grid td.editable:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+/* Tombol toggle dark mode (opsional) */
+.dark-mode-toggle {
+  position: fixed;
+  top: 10px;
+  right: 20px;
+  z-index: 9999;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 30px;
+  padding: 8px 16px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+}
+body.dark-mode .dark-mode-toggle {
+  background: rgba(0,0,0,0.4);
+  border-color: rgba(255,255,255,0.2);
+}

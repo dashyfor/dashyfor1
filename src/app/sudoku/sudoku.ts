@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Header } from '../header/header';
 import { Sidebar } from '../sidebar/sidebar';
@@ -11,25 +11,72 @@ import { Footer } from '../footer/footer';
   templateUrl: './sudoku.html',
   styleUrls: ['./sudoku.css']
 })
-export class Sudoku {
+export class Sudoku implements AfterViewInit, OnInit {
   grid: number[][] = [];
   initialGrid: number[][] = [];
+  solutionGrid: number[][] = []; // ← menyimpan solusi lengkap
   errors: boolean[][] = [];
   
-  // Angka yang sedang dipilih (1-9) atau null
   selectedNumber: number | null = null;
-  
-  // Menyimpan jumlah kemunculan angka 1-9 di grid saat ini
-  numberCounts: number[] = Array(10).fill(0); // index 0 tidak dipakai
-
-  // Flag untuk menampilkan pesan error sementara
+  numberCounts: number[] = Array(10).fill(0);
   errorMessage: string | null = null;
   errorTimeout: any = null;
 
-  constructor() {
+  sidebarOpen: boolean = false;
+  isDarkMode: boolean = false;
+
+  constructor(private renderer: Renderer2) {
     this.newGame();
   }
 
+  ngOnInit(): void {
+    this.checkDarkMode();
+  }
+
+  ngAfterViewInit(): void {
+    this.renderer.removeClass(document.body, 'sidebar-open');
+    this.renderer.removeClass(document.body, 'sidebar-collapse');
+    this.renderer.addClass(document.body, 'sidebar-closed');
+    this.sidebarOpen = false;
+  }
+
+  // ----- DARK MODE -----
+  checkDarkMode(): void {
+    this.isDarkMode = document.body.classList.contains('dark-mode');
+  }
+
+  toggleDarkMode(): void {
+    if (this.isDarkMode) {
+      this.renderer.removeClass(document.body, 'dark-mode');
+      this.isDarkMode = false;
+    } else {
+      this.renderer.addClass(document.body, 'dark-mode');
+      this.isDarkMode = true;
+    }
+  }
+
+  // ----- SIDEBAR -----
+  toggleSidebar(): void {
+    if (this.sidebarOpen) {
+      this.closeSidebar();
+    } else {
+      this.openSidebar();
+    }
+  }
+
+  openSidebar(): void {
+    this.renderer.removeClass(document.body, 'sidebar-closed');
+    this.renderer.addClass(document.body, 'sidebar-open');
+    this.sidebarOpen = true;
+  }
+
+  closeSidebar(): void {
+    this.renderer.removeClass(document.body, 'sidebar-open');
+    this.renderer.addClass(document.body, 'sidebar-closed');
+    this.sidebarOpen = false;
+  }
+
+  // ----- LOGIKA SUDOKU -----
   private createEmptyGrid(): number[][] {
     return Array.from({ length: 9 }, () => Array(9).fill(0));
   }
@@ -38,7 +85,6 @@ export class Sudoku {
     return grid.map(row => [...row]);
   }
 
-  // Menghitung jumlah masing-masing angka di grid
   private updateNumberCounts(): void {
     const counts = Array(10).fill(0);
     for (let r = 0; r < 9; r++) {
@@ -52,6 +98,8 @@ export class Sudoku {
 
   newGame(): void {
     const solution = this.generateSolution();
+    this.solutionGrid = this.copyGrid(solution);
+
     const puzzle = this.copyGrid(solution);
     const cellsToRemove = 45 + Math.floor(Math.random() * 10);
     let removed = 0;
@@ -115,20 +163,12 @@ export class Sudoku {
     return true;
   }
 
-  // Cek validitas di grid saat ini untuk pengecekan error
-  private isValidInContext(grid: number[][], row: number, col: number, num: number): boolean {
-    for (let c = 0; c < 9; c++) if (c !== col && grid[row][c] === num) return false;
-    for (let r = 0; r < 9; r++) if (r !== row && grid[r][col] === num) return false;
-    const startRow = Math.floor(row/3)*3, startCol = Math.floor(col/3)*3;
-    for (let r = startRow; r < startRow+3; r++)
-      for (let c = startCol; c < startCol+3; c++)
-        if ((r !== row || c !== col) && grid[r][c] === num) return false;
-    return true;
+  // Cek apakah angka yang dimasukkan sesuai solusi
+  private isCorrectNumber(row: number, col: number, num: number): boolean {
+    return this.solutionGrid[row][col] === num;
   }
 
-  // Saat tombol angka diklik
   selectNumber(num: number): void {
-    // Jika angka sudah habis (count == 9), tidak bisa dipilih
     if (this.numberCounts[num] >= 9) {
       this.showError('Angka ' + num + ' sudah habis digunakan!');
       return;
@@ -137,59 +177,58 @@ export class Sudoku {
     this.clearError();
   }
 
-  // Saat sel diklik
   onCellClick(row: number, col: number): void {
-    // Jika sel adalah puzzle awal (fixed), tidak bisa diubah
+    // Jika sel adalah petunjuk awal, tidak bisa diubah
     if (this.initialGrid[row][col] !== 0) {
       this.showError('Sel ini adalah petunjuk awal, tidak bisa diubah.');
       return;
     }
-    // Jika belum pilih angka
     if (this.selectedNumber === null) {
       this.showError('Silakan pilih angka terlebih dahulu!');
       return;
     }
 
     const num = this.selectedNumber;
-    // Cek apakah angka sudah habis
     if (this.numberCounts[num] >= 9) {
       this.showError('Angka ' + num + ' sudah habis digunakan!');
-      this.selectedNumber = null; // reset pilihan
+      this.selectedNumber = null;
       return;
     }
 
-    // Jika sel sudah berisi angka, kita bisa timpa? lebih baik biarkan tidak bisa timpa.
-    if (this.grid[row][col] !== 0) {
-      this.showError('Sel ini sudah terisi. Hapus dulu jika ingin mengubah.');
-      return;
+    // Hapus angka lama jika ada (untuk update counts)
+    const oldVal = this.grid[row][col];
+    if (oldVal !== 0) {
+      this.numberCounts[oldVal]--;
     }
 
-    // Cek validitas penempatan
-    if (!this.isValidInContext(this.grid, row, col, num)) {
-      this.showError('Penempatan angka ' + num + ' di sini melanggar aturan Sudoku!');
-      // Tandai error pada sel tersebut
+    // Cek apakah angka sesuai solusi
+    if (!this.isCorrectNumber(row, col, num)) {
+      // Salah: tandai error permanen
       this.errors[row][col] = true;
-      // Hilangkan error setelah 2 detik
-      setTimeout(() => {
-        this.errors[row][col] = false;
-      }, 2000);
+      this.showError('Angka ' + num + ' tidak sesuai dengan solusi!');
+      // Tetap masukkan angka, biar terlihat
+      this.grid[row][col] = num;
+      this.numberCounts[num]++;
+      this.updateNumberCounts();
+      this.selectedNumber = null;
+      // Error tetap merah sampai diganti
       return;
     }
 
-    // Tempatkan angka
+    // Benar: masukkan angka dan hilangkan error jika ada
     this.grid[row][col] = num;
-    this.errors[row][col] = false; // hapus error jika ada
+    this.errors[row][col] = false;
+    this.numberCounts[num]++;
     this.updateNumberCounts();
-    this.selectedNumber = null; // setelah menempatkan, reset pilihan angka
+    this.selectedNumber = null;
     this.clearError();
 
-    // Cek apakah permainan selesai (semua sel terisi)
+    // Cek kemenangan
     if (this.isGridComplete()) {
       alert('Selamat! Anda berhasil menyelesaikan Sudoku! 🎉');
     }
   }
 
-  // Cek apakah grid sudah terisi semua (tidak ada 0)
   private isGridComplete(): boolean {
     for (let r = 0; r < 9; r++)
       for (let c = 0; c < 9; c++)
@@ -197,7 +236,6 @@ export class Sudoku {
     return true;
   }
 
-  // Menampilkan pesan error (toast)
   private showError(msg: string): void {
     this.errorMessage = msg;
     if (this.errorTimeout) clearTimeout(this.errorTimeout);
@@ -206,7 +244,7 @@ export class Sudoku {
     }, 3000);
   }
 
-  private clearError(): void {
+  clearError(): void {
     this.errorMessage = null;
     if (this.errorTimeout) {
       clearTimeout(this.errorTimeout);
@@ -214,32 +252,31 @@ export class Sudoku {
     }
   }
 
-  // Fungsi untuk menghapus angka dari sel (dengan klik kanan atau tombol hapus)
-  // Kita bisa tambahkan tombol "Hapus" atau klik kanan.
-  // Untuk sederhana, kita tambahkan tombol hapus di samping angka.
   clearSelectedCell(row: number, col: number): void {
     if (this.initialGrid[row][col] !== 0) {
       this.showError('Sel ini adalah petunjuk awal, tidak bisa dihapus.');
       return;
     }
     if (this.grid[row][col] === 0) return;
+    const val = this.grid[row][col];
     this.grid[row][col] = 0;
-    this.errors[row][col] = false;
+    this.errors[row][col] = false; // hapus error karena kosong
+    this.numberCounts[val]--;
     this.updateNumberCounts();
   }
 
-  // Solve otomatis
   solve(): void {
-    const board = this.copyGrid(this.grid);
-    if (this.solveSudoku(board)) {
-      this.grid = board;
-      this.errors = this.createEmptyGrid().map(() => Array(9).fill(false));
-      this.updateNumberCounts();
-      this.selectedNumber = null;
-      this.clearError();
-    } else {
-      this.showError('Tidak ada solusi untuk puzzle ini!');
+    for (let r = 0; r < 9; r++) {
+      for (let c = 0; c < 9; c++) {
+        if (this.initialGrid[r][c] === 0) {
+          this.grid[r][c] = this.solutionGrid[r][c];
+          this.errors[r][c] = false;
+        }
+      }
     }
+    this.updateNumberCounts();
+    this.selectedNumber = null;
+    this.clearError();
   }
 
   reset(): void {
@@ -258,12 +295,10 @@ export class Sudoku {
     return this.errors[row] && this.errors[row][col];
   }
 
-  // Untuk mengecek apakah tombol angka disabled (habis)
   isNumberDisabled(num: number): boolean {
     return this.numberCounts[num] >= 9;
   }
 
-  // Untuk menampilkan sisa angka
   getRemainingCount(num: number): number {
     return 9 - this.numberCounts[num];
   }

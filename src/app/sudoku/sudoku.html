@@ -1,58 +1,75 @@
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed pace-primary">
-<div class="sudoku-wrapper">
-  <app-header></app-header>
-  <app-sidebar moduleName="sudoku"></app-sidebar>
-  <div class="sudoku-main">
-    <div class="sudoku-container glass">
-      <h1>🧩 Sudoku</h1>
-      
-      <!-- Pesan error -->
-      <div *ngIf="errorMessage" class="error-toast glass-error">
-        {{ errorMessage }}
-      </div>
+  <div class="wrapper">
+    <!-- Overlay untuk menutup sidebar (klik di luar) -->
+    <div class="sidebar-overlay" [class.active]="sidebarOpen" (click)="closeSidebar()"></div>
+    <!-- Tombol Dark Mode -->
+    <button class="dark-mode-toggle" (click)="toggleDarkMode()">
+      {{ isDarkMode ? '☀️ Light' : '🌙 Dark' }}
+    </button>
+    <app-header></app-header>
+    <app-sidebar moduleName="sudoku"></app-sidebar>
 
-      <!-- Tombol angka 1-9 dengan sisa count -->
-      <div class="number-panel">
-        <button *ngFor="let num of [1,2,3,4,5,6,7,8,9]"
-                class="num-btn glass-btn"
-                [class.selected]="selectedNumber === num"
-                [class.disabled]="isNumberDisabled(num)"
-                (click)="selectNumber(num)"
-                [disabled]="isNumberDisabled(num)">
-          {{ num }}
-          <span class="badge">{{ getRemainingCount(num) }}</span>
-        </button>
-      </div>
+    <!-- Konten utama dengan liquid glass -->
+    <div class="content-wrapper sudoku-content-wrapper">
+      <!-- Tidak perlu content-header karena kita sudah punya judul di dalam container glass -->
+      <section class="content">
+        <div class="container-fluid">
+          <div class="sudoku-container glass">
+            <h1>Sudoku</h1>
+            
+            <!-- Pesan error -->
+            <div *ngIf="errorMessage" class="error-toast glass-error">
+              {{ errorMessage }}
+              <button type="button" class="close" (click)="clearError()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
 
-      <!-- Grid Sudoku -->
-      <div class="grid-wrapper">
-        <table class="sudoku-grid">
-          <tbody>
-            <tr *ngFor="let row of grid; let r = index">
-              <td *ngFor="let cell of row; let c = index"
-                  (click)="onCellClick(r, c)"
-                  [class.fixed]="!isEditable(r, c)"
-                  [class.editable]="isEditable(r, c)"
-                  [class.error]="isError(r, c)"
-                  [class.border-right]="(c+1) % 3 === 0 && c < 8"
-                  [class.border-bottom]="(r+1) % 3 === 0 && r < 8"
-                  [class.highlight]="selectedNumber !== null && isEditable(r,c) && grid[r][c] === 0">
-                <!-- Jika sel kosong, tidak tampil angka -->
-                <span *ngIf="cell !== 0" class="cell-value">{{ cell }}</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+            <!-- Tombol angka 1-9 dengan sisa count -->
+            <div class="number-panel">
+              <button *ngFor="let num of [1,2,3,4,5,6,7,8,9]"
+                      class="num-btn glass-btn"
+                      [class.selected]="selectedNumber === num"
+                      [class.disabled]="isNumberDisabled(num)"
+                      (click)="selectNumber(num)"
+                      [disabled]="isNumberDisabled(num)">
+                {{ num }}
+                <span class="badge">{{ getRemainingCount(num) }}</span>
+              </button>
+            </div>
 
-      <!-- Tombol aksi -->
-      <div class="action-panel">
-        <button class="action-btn glass-btn" (click)="newGame()">✨ Generate</button>
-        <button class="action-btn glass-btn" (click)="solve()">⚡ Solve</button>
-        <button class="action-btn glass-btn" (click)="reset()">🔄 Reset</button>
-      </div>
+            <!-- Grid Sudoku -->
+            <div class="grid-wrapper">
+              <table class="sudoku-grid">
+                <tbody>
+                  <tr *ngFor="let row of grid; let r = index">
+                    <td *ngFor="let cell of row; let c = index"
+                        (click)="onCellClick(r, c)"
+                        [class.fixed]="!isEditable(r, c)"
+                        [class.editable]="isEditable(r, c)"
+                        [class.error]="isError(r, c)"
+                        [class.border-right]="(c+1) % 3 === 0 && c < 8"
+                        [class.border-bottom]="(r+1) % 3 === 0 && r < 8"
+                        [class.highlight]="selectedNumber !== null && isEditable(r,c) && grid[r][c] === 0">
+                      <!-- Jika sel kosong, tidak tampil angka -->
+                      <span *ngIf="cell !== 0" class="cell-value">{{ cell }}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Tombol aksi -->
+            <div class="action-panel">
+              <button class="action-btn glass-btn" (click)="newGame()"> Generate</button>
+              <button class="action-btn glass-btn" (click)="solve()"> Solve</button>
+              <button class="action-btn glass-btn" (click)="reset()"> Reset</button>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
+
+    <app-footer></app-footer>
   </div>
-  <app-footer></app-footer>
-</div>
 </body>

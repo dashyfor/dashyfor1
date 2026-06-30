@@ -26,22 +26,28 @@ export class Cuaca implements AfterViewInit {
   todayDate: string = '';
   cityData: any = null;
 
+  // Status sidebar (untuk toggle dan overlay)
+  sidebarOpen: boolean = false;
+
   constructor(
     private renderer: Renderer2,
     private http: HttpClient,
-  ) {
-    this.renderer.removeClass(document.body, 'sidebar-open');
-    this.renderer.addClass(document.body, 'sidebar-closed');
-  }
+  ) {}
 
   ngAfterViewInit(): void {
+    // Inisialisasi sidebar dalam keadaan tertutup (sama seperti Forex)
+    this.renderer.removeClass(document.body, 'sidebar-open');
+    this.renderer.removeClass(document.body, 'sidebar-collapse');
+    this.renderer.addClass(document.body, 'sidebar-closed');
+    this.sidebarOpen = false;
+
+    // Inisialisasi DataTable
     this.table1 = $('#table1').DataTable({
       columnDefs: [
         {
           targets: 0,
           render: function (data: string) {
             const waktu = moment(data + ' UTC');
-
             return (
               waktu.local().format('YYYY-MM-DD') + '<br />' + waktu.local().format('HH:mm') + ' WIB'
             );
@@ -62,10 +68,8 @@ export class Cuaca implements AfterViewInit {
           targets: 2,
           render: function (data: string) {
             const array = data.split('|');
-
             const cuaca = array[0];
             const description = array[1];
-
             return `
               <strong>${cuaca}</strong>
               <br>
@@ -86,6 +90,28 @@ export class Cuaca implements AfterViewInit {
     this.getData('Pontianak');
   }
 
+  // ----- METODE UNTUK SIDEBAR (sama seperti yang diinginkan) -----
+  toggleSidebar(): void {
+    if (this.sidebarOpen) {
+      this.closeSidebar();
+    } else {
+      this.openSidebar();
+    }
+  }
+
+  openSidebar(): void {
+    this.renderer.removeClass(document.body, 'sidebar-closed');
+    this.renderer.addClass(document.body, 'sidebar-open');
+    this.sidebarOpen = true;
+  }
+
+  closeSidebar(): void {
+    this.renderer.removeClass(document.body, 'sidebar-open');
+    this.renderer.addClass(document.body, 'sidebar-closed');
+    this.sidebarOpen = false;
+  }
+
+  // ------ METODE LAINNYA (tidak berubah) ------
   kelvinToCelsius(kelvin: number): number {
     let celsius = kelvin - 273.15;
     celsius = Math.round(celsius * 100) / 100;
@@ -126,20 +152,17 @@ export class Cuaca implements AfterViewInit {
             this.cityData = data.city;
             this.table1.clear();
 
-            // Cuaca saat ini
             this.currentWeather = list[0];
             this.todayDate = moment(this.currentWeather.dt_txt + ' UTC')
               .local()
               .format('MMM DD, hh:mma');
 
-            // Peta kota
             if (this.cityData?.coord) {
               setTimeout(() => {
                 this.initMap(this.cityData.coord.lat, this.cityData.coord.lon);
               }, 100);
             }
 
-            // Tambah data ke tabel
             list.forEach((element: any) => {
               const weather = element.weather[0];
               const iconUrl = `https://openweathermap.org/img/wn/${weather.icon}@2x.png`;
@@ -150,7 +173,6 @@ export class Cuaca implements AfterViewInit {
               const temp = `${tempMin.toFixed(1)}°C - ${tempMax.toFixed(1)}°C`;
 
               const row = [element.dt_txt, iconUrl, cuacaDeskripsi, temp];
-
               this.table1.row.add(row);
             });
 
@@ -200,7 +222,6 @@ export class Cuaca implements AfterViewInit {
         .bindPopup(`<strong>${this.cityData?.name || 'Lokasi'}</strong>`)
         .openPopup();
 
-      // Responsif untuk ukuran layar
       setTimeout(() => {
         if (this.map) {
           this.map.invalidateSize();
