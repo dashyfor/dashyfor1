@@ -1,172 +1,193 @@
-<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed pace-primary">
-  <div class="wrapper">
-    <!-- Overlay untuk menutup sidebar saat klik di luar -->
-    <div class="sidebar-overlay" [class.active]="sidebarOpen" (click)="closeSidebar()"></div>
+<div class="wrapper">
+  <app-header></app-header>
+  <app-sidebar moduleName="Cuaca"></app-sidebar>
 
-    <app-header></app-header>
-    <app-sidebar moduleName="cuaca"></app-sidebar>
-
-    <div class="content-wrapper">
-      <!-- Content Header -->
-      <div class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0">Cuaca</h1>
-            </div>
-
-            <div class="col-sm-6">
-              <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item">
-                  <a [routerLink]="['/dashboard']"> Home </a>
-                </li>
-                <li class="breadcrumb-item active">Cuaca</li>
-              </ol>
-            </div>
+  <div class="content-wrapper">
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Cuaca</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item">
+                <a [routerLink]="['/dashboard']" routerLinkActive="router-link-active">Home</a>
+              </li>
+              <li class="breadcrumb-item active">Cuaca</li>
+            </ol>
           </div>
         </div>
       </div>
-
-      <!-- Content -->
-      <section class="content">
-        <div class="container-fluid">
-          <!-- Search -->
-          <div class="row">
-            <div class="col-12">
-              <div class="card shadow-sm">
-                <div class="card-body">
-                  <div class="form-group mb-0">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Masukkan nama kota lalu tekan Enter"
-                      (keydown.enter)="handleEnter($event)"
-                      #cityInput
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Current Weather -->
-          <div class="row mt-3" *ngIf="currentWeather && cityData">
-            <div class="col-12">
-              <div class="card shadow-sm weather-card">
-                <div class="card-body">
-                  <div class="row align-items-center">
-                    <!-- Kiri -->
-                    <div class="col-lg-7 col-md-12">
-                      <small class="text-muted">
-                        {{ todayDate }}
-                      </small>
-
-                      <h2 class="font-weight-bold mb-0">
-                        {{ cityData.name }},
-                        {{ cityData.country }}
-                      </h2>
-
-                      <p class="mb-0 text-capitalize">
-                        {{ currentWeather.weather[0].description }}
-                      </p>
-                    </div>
-
-                    <!-- Kanan -->
-                    <div class="col-lg-5 col-md-12 text-center text-lg-right mt-3 mt-lg-0">
-                      <img
-                        [src]="getWeatherIconUrl(currentWeather.weather[0].icon)"
-                        alt="Weather Icon"
-                        class="weather-icon"
-                      />
-
-                      <div class="weather-temp">
-                        {{ kelvinToCelsius(currentWeather.main.temp) | number: '1.0-0' }}°C
-                      </div>
-                    </div>
-                  </div>
-
-                  <hr />
-
-                  <div class="row">
-                    <div class="col-lg-7">
-                      <div class="row">
-                        <div class="col-md-6 col-12 mb-2">
-                          <i
-                            class="fas fa-wind mr-2"
-                            [style.transform]="'rotate(' + currentWeather.wind.deg + 'deg)'"
-                          ></i>
-                          {{ currentWeather.wind.speed }} m/s
-                        </div>
-
-                        <div class="col-md-6 col-12 mb-2">
-                          <i class="fas fa-tint mr-2"></i>
-                          Kelembaban:
-                          <strong> {{ currentWeather.main.humidity }}% </strong>
-                        </div>
-
-                        <div class="col-md-6 col-12 mb-2">
-                          <i class="fas fa-tachometer-alt mr-2"></i>
-                          {{ currentWeather.main.pressure }} hPa
-                        </div>
-
-                        <div class="col-md-6 col-12 mb-2">
-                          <i class="fas fa-eye mr-2"></i>
-                          {{ (currentWeather.visibility / 1000).toFixed(1) }}
-                          km
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Map -->
-                    <div class="col-lg-5 mt-3 mt-lg-0">
-                      <div id="map-container" class="rounded shadow-sm"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Empty State -->
-          <div class="row mt-3" *ngIf="!currentWeather || !cityData">
-            <div class="col-12">
-              <div class="card shadow-sm">
-                <div class="card-body text-center py-5">
-                  <i class="fas fa-cloud text-muted" style="font-size: 48px; margin-bottom: 15px"></i>
-                  <p class="text-muted">Masukkan nama kota untuk melihat data cuaca</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Forecast -->
-          <div class="row mt-3">
-            <div class="col-12">
-              <div class="card shadow-sm">
-                <div class="card-body">
-                  <h5 class="font-weight-bold mb-3">Forecast 5 Hari</h5>
-
-                  <div class="table-responsive">
-                    <table id="table1" class="table table-bordered table-striped table-hover w-100">
-                      <thead>
-                        <tr>
-                          <th>Waktu</th>
-                          <th>Icon</th>
-                          <th>Cuaca</th>
-                          <th>Suhu</th>
-                        </tr>
-                      </thead>
-                      <tbody></tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
 
-    <app-footer></app-footer>
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          
+          <div class="col-12 mb-3">
+            <div class="form-group">
+              <input 
+                type="text" 
+                class="form-control" 
+                placeholder="Nama kota... (Enter untuk mencari)"
+                (keydown.enter)="handleEnter($event)" 
+              />
+            </div>
+          </div>
+
+          <!-- Weather Card seperti AccuWeather -->
+          <div class="col-12 mb-4" *ngIf="currentWeather && cityData">
+            <div class="card weather-card shadow-sm" style="border-radius: 20px; overflow: hidden; border: none;">
+              <div class="card-body p-0">
+                <div class="row g-0">
+                  <!-- Left Section - Weather Info -->
+                  <div class="col-md-7 p-4" style="background: linear-gradient(135deg, #1a2a6c, #2d4373); color: white;">
+                    <!-- Red Alert -->
+                    <div class="alert-badge mb-3" style="display: inline-block; background: #e74c3c; color: white; padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+                      ⚠️ Peringatan Merah untuk Badai Petir
+                    </div>
+
+                    <div class="weather-date" style="color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 4px;">
+                      {{ todayDate }}
+                    </div>
+                    
+                    <h2 class="weather-city font-weight-bold" style="color: white; font-size: 28px; margin-bottom: 8px;">
+                      {{ cityData?.name }}, {{ cityData?.country }}
+                    </h2>
+
+                    <!-- Current Temperature -->
+                    <div class="d-flex align-items-center mt-3">
+                      <img 
+                        [src]="getWeatherIconUrl(currentWeather.weather[0].icon)"
+                        alt="weather icon"
+                        style="width: 80px; height: 80px; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));"
+                      />
+                      <div class="ml-3">
+                        <span style="font-size: 4.5rem; font-weight: 700; line-height: 1;">
+                          {{ kelvinToCelcius(currentWeather.main.temp) | number : '1.0-0' }}°
+                        </span>
+                        <span style="font-size: 2rem; font-weight: 300;">C</span>
+                      </div>
+                    </div>
+
+                    <!-- Weather Description -->
+                    <div class="weather-summary mt-2" style="font-size: 16px; color: rgba(255,255,255,0.9);">
+                      {{ currentWeather.weather[0].description | titlecase }}
+                    </div>
+
+                    <!-- Additional Details Grid -->
+                    <div class="row mt-4 pt-2" style="border-top: 1px solid rgba(255,255,255,0.2);">
+                      <div class="col-6">
+                        <div style="color: rgba(255,255,255,0.6); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">RealFeel Shade®</div>
+                        <div style="font-size: 20px; font-weight: 600;">{{ kelvinToCelcius(currentWeather.main.feels_like) | number : '1.0-0' }}°</div>
+                      </div>
+                      <div class="col-6">
+                        <div style="color: rgba(255,255,255,0.6); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Indeks Panas</div>
+                        <div style="font-size: 20px; font-weight: 600;">
+                          {{ (kelvinToCelcius(currentWeather.main.temp) + 2) | number : '1.0-0' }}°
+                        </div>
+                      </div>
+                      <div class="col-6 mt-2">
+                        <div style="color: rgba(255,255,255,0.6); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Angin</div>
+                        <div style="font-size: 16px; font-weight: 500;">
+                          <i class="fas fa-location-arrow mr-1" [style.transform]="'rotate(' + currentWeather.wind.deg + 'deg)'"></i>
+                          {{ getWindDirection(currentWeather.wind.deg) }} {{ (currentWeather.wind.speed * 3.6) | number : '1.0-0' }} km/j
+                        </div>
+                      </div>
+                      <div class="col-6 mt-2">
+                        <div style="color: rgba(255,255,255,0.6); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Kelembapan</div>
+                        <div style="font-size: 16px; font-weight: 500;">{{ currentWeather.main.humidity }}%</div>
+                      </div>
+                    </div>
+
+                    <!-- Air Quality -->
+                    <div class="mt-3" style="background: rgba(255,255,255,0.1); border-radius: 30px; padding: 8px 20px; display: inline-block;">
+                      <span style="font-size: 14px; color: rgba(255,255,255,0.8);">Kualitas Udara</span>
+                      <span style="font-weight: 600; margin-left: 10px; color: #f1c40f;">Lumayan</span>
+                    </div>
+                  </div>
+
+                  <!-- Right Section - Map -->
+                  <div class="col-md-5 p-0" style="background: #e8edf5; min-height: 350px;">
+                    <div id="map-container" class="h-100 w-100" 
+                         style="min-height: 350px; position: relative; z-index: 1">
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hourly Forecast -->
+          <div class="col-12 mb-4" *ngIf="forecastList">
+            <div class="card shadow-sm" style="border-radius: 15px; border: none;">
+              <div class="card-body">
+                <h5 class="mb-3 font-weight-bold" style="color: #2c3e50;">PRAKIRAN PER JAM</h5>
+                <div class="d-flex overflow-auto pb-2" style="gap: 15px;">
+                  <div *ngFor="let item of getHourlyForecast()" 
+                       class="text-center p-3 rounded" 
+                       style="min-width: 80px; background: #f8f9fa; border-radius: 12px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #2c3e50;">{{ item.time }}</div>
+                    <div style="font-size: 22px; font-weight: 700; color: #e67e22;">{{ item.temp }}°</div>
+                    <div style="font-size: 22px; margin: 2px 0;">{{ item.icon }}</div>
+                    <div style="font-size: 12px; color: #e74c3c; font-weight: 600;">{{ item.chance }}%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5-Day Forecast -->
+          <div class="col-12">
+            <div class="card shadow-sm" style="border-radius: 15px; border: none;">
+              <div class="card-body">
+                <h5 class="mb-3 font-weight-bold" style="color: #2c3e50;">PRAKIRAN HARIAN</h5>
+                <table class="table table-borderless mb-0">
+                  <thead>
+                    <tr style="color: #7f8c8d; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+                      <th>HARI</th>
+                      <th>TANGGAL</th>
+                      <th>SUHU</th>
+                      <th>CUACA</th>
+                      <th>STATUS</th>
+                      <th class="text-center">%</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let day of getDailyForecast()" style="border-bottom: 1px solid #ecf0f1;">
+                      <td style="font-weight: 600; color: #2c3e50;">{{ day.day }}</td>
+                      <td style="color: #34495e;">{{ day.date }}</td>
+                      <td>
+                        <span style="font-weight: 600; color: #e67e22;">{{ day.high }}°</span>
+                        <span style="color: #7f8c8d; margin: 0 4px;">/</span>
+                        <span style="color: #3498db;">{{ day.low }}°</span>
+                      </td>
+                      <td>
+                        <span style="display: flex; align-items: center; gap: 6px;">
+                          <span style="font-size: 20px;">{{ day.icon }}</span>
+                          <span style="font-size: 14px; color: #2c3e50;">{{ day.weather }}</span>
+                        </span>
+                      </td>
+                      <td>
+                        <span style="font-size: 14px; color: #34495e;">{{ day.status }}</span>
+                      </td>
+                      <td class="text-center">
+                        <span style="background: #e8f0fe; padding: 2px 12px; border-radius: 12px; font-weight: 600; color: #2c3e50; font-size: 14px;">
+                          {{ day.chance }}%
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
   </div>
-</body>
+  <app-footer></app-footer>
+</div>
